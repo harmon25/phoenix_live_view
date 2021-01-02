@@ -86,6 +86,7 @@ const TITLE = "t"
 
 
 let logError = (msg, obj) => console.error && console.error(msg, obj)
+let logWarning = (msg, obj) => console.warn && console.warn(msg, obj)
 
 function detectDuplicateIds() {
   let ids = new Set()
@@ -597,7 +598,7 @@ export class Rendered {
           return [true, hasComponents]
         } else {
           if(child.nodeValue.trim() !== ""){
-            logError(`only HTML element tags are allowed at the root of components.\n\n` +
+            logWarning(`only HTML element tags are allowed at the root of components.\n\n` +
                     `got: "${child.nodeValue.trim()}"\n\n` +
                     `within:\n`, template.innerHTML.trim())
             child.replaceWith(this.createSpan(child.nodeValue, cid))
@@ -610,11 +611,11 @@ export class Rendered {
       }, [false, false])
 
     if(!hasChildNodes && !hasChildComponents){
-      logError(`expected at least one HTML element tag inside a component, but the component is empty:\n`,
+      logWarning(`expected at least one HTML element tag inside a component, but the component is empty:\n`,
                template.innerHTML.trim())
       return this.createSpan("", cid).outerHTML
     } else if(!hasChildNodes && hasChildComponents){
-      logError(`expected at least one HTML element tag directly inside a component, but only subcomponents were found. A component must render at least one HTML tag directly inside itself.`,
+      logWarning(`expected at least one HTML element tag directly inside a component, but only subcomponents were found. A component must render at least one HTML tag directly inside itself.`,
                template.innerHTML.trim())
       return template.innerHTML
     } else {
